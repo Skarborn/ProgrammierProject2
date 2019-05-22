@@ -1,2 +1,2 @@
 # ProgrammierProject2
-Creating a Program which restore deleted files
+Creating a Program which restores deleted files
