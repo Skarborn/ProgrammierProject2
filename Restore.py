@@ -1,13 +1,17 @@
 import pathlib
 
-def get_filelength(file):
-    length = int.from_bytes(file.read(4),"little")
-    return length
+def restore_wave(file,file_length):
+    format_chunkname = file.read(4)
+    format_chunklen = file.read(4)    
+    dataformat = file.read(2)
+    nchan = file.read(2)
+    samplerate = file.read(4)
+    bytespersecond = file.read(4)
+    alignment = file.read(2)
+    bitspersample = file.read(2)
+    
 
-def restore_wave(file):
-    pass
-
-def restore_avi(file):
+def restore_avi(file,file_length):
     pass
 
 absolutePath = '/Users/martinberdau/Desktop/data_deleted.img'
@@ -18,15 +22,13 @@ disk_size = disk.stat()[6]
 
 with disk.open('rb') as file:
     for x in range(disk_size):
-        if file.read(1) == b'R':
-            if file.read(1) == b'I':
-                if file.read(1) == b'F':
-                    if file.read(1) == b'F':
-                        print("RIFF gefunden")
-                        print(f"{get_filelength(file)} Bytes")
-                        file_type = file.read(4)
-                        if file_type==b'WAVE':
-                            print("WAVE-Datei")
-                            restore_wave(file)
-                        if file_type==b'AVI ':
-                            print("AVI-Datei")
+        if file.read(4) == b'RIFF':
+            print("RIFF gefunden")
+            file_length = int.from_bytes(file.read(4),"little")
+            riff_type = file.read(4)
+            if riff_type==b'WAVE':
+                print("WAVE-Datei")
+                restore_wave(file,file_length)
+            if riff_type==b'AVI ':
+                print("AVI-Datei")
+                restore_avi(file,file_length)
