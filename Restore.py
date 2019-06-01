@@ -19,3 +19,8 @@ with disk.open('rb') as file:
                     if file.read(1) == b'F':
                         print("RIFF gefunden")
                         print(f"{get_filelength(file)} Bytes")
+                        file_type = file.read(4)
+                        if file_type==b'WAVE':
+                            print("WAVE-Datei")
+                        if file_type==b'AVI ':
+                            print("AVI-Datei")
