@@ -1,14 +1,13 @@
 import pathlib
 
 def restore_wave(file,file_length):
-    format_chunkname = file.read(4)
-    format_chunklen = file.read(4)    
-    dataformat = file.read(2)
-    nchan = file.read(2)
-    samplerate = file.read(4)
-    bytespersecond = file.read(4)
-    alignment = file.read(2)
-    bitspersample = file.read(2)
+    new_wav = pathlib.Path("restored_wav.wav")
+    with new_wav.open('wb') as new_file:
+        new_file.write(b'RIFF')
+        new_file.write((file_length).to_bytes(4, 'little'))
+        new_file.write(b'WAVE')
+        for data in range(file_length-16):
+            new_file.write(file.read(1))
     
 
 def restore_avi(file,file_length):
