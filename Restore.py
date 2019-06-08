@@ -39,11 +39,10 @@ def restore_JPEG(file,found_jpegs):
 
 
 
-absolutePath_MB = '/Users/martinberdau/Desktop/data_deleted.img'
-absolutePath_TS = '/Users/TammoSander/Documents/Studium_Oldenburg/Viertes_Semester/AngewandtesProgrammieren/ProgrammierProject2/data_deleted.img'
+absolutePath = input('Pfad zur .img-Datei eingeben: ')
+# /Users/martinberdau/Desktop/HA/4.Semester/AngewandtesProgrammieren/ProgrammierProject2/data_deleted.img
 
-
-disk = pathlib.Path(absolutePath_TS)
+disk = pathlib.Path(absolutePath)
 disk_size = disk.stat()[6]
 
 # counts for files
