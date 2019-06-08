@@ -1,6 +1,6 @@
 import pathlib
 
-# FIND WAVS
+# FIND AND RESTORE WAVS
 def restore_wave(file,file_length,found_wavs):
 	new_wav = pathlib.Path(f"restored_wav_{found_wavs+1}.wav")
 	with new_wav.open('wb') as new_file:
@@ -21,16 +21,23 @@ def restore_avi(file,file_length,found_avis):
 			new_file.write(file.read(1))
 
 
+# FIND AND RESTORE JPEGS
 def restore_JPEG(file,found_jpegs):
 	new_JPEG = pathlib.Path(f"restored_jpeg_{found_jpegs+1}.jpeg")
+	start_img = 1
 	current = file.read(1)
 	current_before = b'0'
 	with new_JPEG.open('wb') as new_file:
-		while current_before+current != b'\xFF\xD9':
+		new_file.write(b'\xFF\xD8')
+		while start_img > 0:
 			current_before = current
 			current = file.read(1)
-			new_file.write(current_before)
-		new_file.write(b'\xD9')
+			new_file.write(current)
+			if current_before+current == b'\xFF\xD8':
+				start_img += 1
+			if current_before+current == b'\xFF\xD9':
+				start_img -= 1
+
 
 
 absolutePath = input('Pfad zur .img-Datei eingeben: ')
@@ -60,7 +67,9 @@ with disk.open('rb') as file:
 ##                restore_avi(file,file_length,found_avis)
 ##                found_avis += 1
                 
-	for x in range(disk_size):
-		if file.read(2) == b'\xFF\xD8':
-				restore_JPEG(file,found_jpegs)
-				found_jpegs += 1
+    for x in range(disk_size):            
+    	if file.read(2) == b'\xFF\xD8':
+    		JPEG_type = file.read(2)
+    		if JPEG_type == b'\xFF\xE0':
+        		restore_JPEG(file,found_jpegs)
+        		found_jpegs += 1
