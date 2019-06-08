@@ -21,11 +21,17 @@ def restore_avi(file,file_length,found_avis):
             new_file.write(file.read(1))
 
 
-def restore_JPEG(file,file_length):
-	new_JPEG = pathlib.Path("restored_jpeg.jpeg")
+def restore_JPEG(file,found_jpegs):
+	new_JPEG = pathlib.Path(f"restored_jpeg_{found_jpegs+1}.jpeg")
+	current = file.read(1)
+	current_before = 0
 	with new_JPEG.open('wb') as new_file:
-		for data in range(file_length):
-			new_file.write(file.read(1))
+		while current_before+current != b'\xFF\xD9':
+			current_before = current
+			current = file.read(1)
+			new_file.write(current_before)
+		new_file.write(b'\xD9')
+
 
 
 absolutePath = '/Users/martinberdau/Desktop/data_deleted.img'
@@ -34,8 +40,9 @@ disk = pathlib.Path(absolutePath)
 disk_size = disk.stat()[6]
 
 # counts for files
-found_wavs = 0
-found_avis = 0
+found_wavs = 1
+found_avis = 1
+found_jpegs = 1
 
 with disk.open('rb') as file:
     for x in range(disk_size):
@@ -50,4 +57,8 @@ with disk.open('rb') as file:
             if riff_type == b'AVI ':
                 print("AVI-Datei")
                 restore_avi(file,file_length)
-        if file.read(2) == b'\xFF\xD8':              
+    for x in range(disk_size):            
+    	if file.read(2) == b'\xFF\xD8':
+        		restore_JPEG(file,found_jpegs)
+        		found_jpegs += 1
+
