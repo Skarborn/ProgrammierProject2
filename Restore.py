@@ -28,8 +28,9 @@ def restore_JPEG(file,found_jpegs):
 	current = file.read(1)
 	current_before = b'0'
 	with new_JPEG.open('wb') as new_file:
-		while start_img > 0:
-			current_before = current
+        new_file.write(b'\xFF\xD8')
+        while start_img > 0:
+            current_before = current
 			current = file.read(1)
 			new_file.write(current)
 			if current_before+current == b'\xFF\xD8':
