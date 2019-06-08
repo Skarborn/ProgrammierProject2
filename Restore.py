@@ -39,12 +39,12 @@ def restore_JPEG(file,found_jpegs):
 				start_img -= 1
 
 
-
 absolutePath = input('Pfad zur .img-Datei eingeben: ')
 # /Users/martinberdau/Desktop/HA/4.Semester/AngewandtesProgrammieren/ProgrammierProject2/data_deleted.img
 
 disk = pathlib.Path(absolutePath)
 disk_size = disk.stat()[6]
+print(disk_size)
 
 
 # counts for files
@@ -66,10 +66,11 @@ with disk.open('rb') as file:
 ##                print("AVI-Datei")
 ##                restore_avi(file,file_length,found_avis)
 ##                found_avis += 1
-                
-    for x in range(disk_size):            
-    	if file.read(2) == b'\xFF\xD8':
-    		JPEG_type = file.read(2)
-    		if JPEG_type == b'\xFF\xE0':
-        		restore_JPEG(file,found_jpegs)
-        		found_jpegs += 1
+				
+	for x in range(disk_size):            
+		if file.read(2) == b'\xFF\xD8':
+			JPEG_type = file.read(2)
+			if JPEG_type == b'\xFF\xE0':
+				restore_JPEG(file,found_jpegs)
+				found_jpegs += 1
+				
