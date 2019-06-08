@@ -13,6 +13,13 @@ def restore_wave(file,file_length):
 def restore_avi(file,file_length):
     pass
 
+def restore_JPEG(file,file_length):
+	new_JPEG = pathlib.Path("restored_jpeg.jpeg")
+	with new_JPEG.open('wb') as new_file:
+		for data in range(file_length):
+			new_file.write(file.read(1))
+
+
 absolutePath = '/Users/martinberdau/Desktop/data_deleted.img'
 
 disk = pathlib.Path(absolutePath)
@@ -25,9 +32,12 @@ with disk.open('rb') as file:
             print("RIFF gefunden")
             file_length = int.from_bytes(file.read(4),"little")
             riff_type = file.read(4)
-            if riff_type==b'WAVE':
+            if riff_type == b'WAVE':
                 print("WAVE-Datei")
                 restore_wave(file,file_length)
-            if riff_type==b'AVI ':
+            if riff_type == b'AVI ':
                 print("AVI-Datei")
                 restore_avi(file,file_length)
+        if file.read(2) == b'\xFF\xD8':
+        	
+
