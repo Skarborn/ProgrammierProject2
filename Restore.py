@@ -42,7 +42,4 @@ with disk.open('rb') as file:
                 found_wavs += 1
             if riff_type==b'AVI ':
                 print("AVI-Datei")
-                #restore_avi(file,file_length,found_avis)
-                for i in range(16):
-                    print(file.read(4))
-                found_avis += 1
+                restore_avi(file,file_length,found_avis)
