@@ -42,6 +42,7 @@ def restore_JPEG(file,found_jpegs):
 absolutePath_MB = '/Users/martinberdau/Desktop/data_deleted.img'
 absolutePath_TS = '/Users/TammoSander/Documents/Studium_Oldenburg/Viertes_Semester/AngewandtesProgrammieren/ProgrammierProject2/data_deleted.img'
 
+
 disk = pathlib.Path(absolutePath_TS)
 disk_size = disk.stat()[6]
 
@@ -51,22 +52,23 @@ found_avis = 0
 found_jpegs = 0
 
 with disk.open('rb') as file:
-    # for x in range(disk_size):
-    #     if file.read(4) == b'RIFF':
-    #         print("RIFF gefunden")
-    #         file_length = int.from_bytes(file.read(4),"little")
-    #         riff_type = file.read(4)
-    #         if riff_type == b'WAVE':
-    #             print("WAVE-Datei")
-    #             restore_wave(file,file_length,found_wavs)
-    #             found_wavs += 1
-    #         if riff_type == b'AVI ':
-    #             print("AVI-Datei")
-    #             restore_avi(file,file_length)
+##    for x in range(disk_size):
+##        if file.read(4) == b'RIFF':
+##            print("RIFF gefunden")
+##            file_length = int.from_bytes(file.read(4),"little")
+##            riff_type = file.read(4)
+##            if riff_type == b'WAVE':
+##                print("WAVE-Datei")
+##                restore_wave(file,file_length,found_wavs)
+##                found_wavs += 1
+##            if riff_type == b'AVI ':
+##                print("AVI-Datei")
+##                restore_avi(file,file_length,found_avis)
+##                found_avis += 1
+                
     for x in range(disk_size):            
     	if file.read(2) == b'\xFF\xD8':
     		JPEG_type = file.read(2)
     		if JPEG_type == b'\xFF\xE0':
         		restore_JPEG(file,found_jpegs)
         		found_jpegs += 1
-
