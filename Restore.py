@@ -55,8 +55,11 @@ absolutePath = input('Pfad zur .img-Datei eingeben: ')
 
 disk = pathlib.Path(absolutePath)
 disk_size = disk.stat()[6]
-print(disk_size)
+print(f"Groesse des Speichers: {disk_size/1000/1000} MB.")
 
+found_jpegs = 0
+found_wavs = 0
+found_avis = 0
 
 with disk.open('rb') as file:
 	# initial 4 bytes that will be looked at to find header
@@ -70,17 +73,30 @@ with disk.open('rb') as file:
 		found_avis=0
 		found_flacs=0
 		found_jpegs=0
-		#if b1+b0 == b'\xFF\xD8':
-		#	JPEG_type = file.read(2)
-		#	if JPEG_type == b'\xFF\xE0':
-		#		restore_JPEG(file,found_jpegs)
-		#		found_jpegs += 1
+
+		# JPEGs
+		if b1+b0 == b'\xFF\xD8':
+			JPEG_type = file.read(2)
+			if JPEG_type == b'\xFF\xE0':
+				restore_JPEG(file,found_jpegs)
+				found_jpegs += 1
 		
+<<<<<<< HEAD
 		if b3+b2+b1+b0 == b'\x66\x4C\x61\x43':
 			print("FLAC gefunden")
 			file_length = int.from_bytes(file.read(4),"big")
 			restore_flac(file,file_length,found_flacs)
+=======
+		# FLACs
+		if b3+b2+b1+b0 == b'fLaC':
+			print("FLAC gefunden")
+			file_length = int.from_bytes(file.read(4),"little")
+			print(f"Angebliche File-Groesse: {file_length/1000/1000} MB.")
+			#restore_flac(file,file_length,found_flacs)
+>>>>>>> ff0c34e7b1485535d0552be1ad1456a8b0663215
 			found_flacs += 1
+		
+		# RIFFs
 		if b3+b2+b1+b0 == b'RIFF':
 			print("RIFF gefunden")
 			file_length = int.from_bytes(file.read(4),"little")
