@@ -25,7 +25,7 @@ def restore_flac(file,file_length,found_flacs):
 	pass
 	new_flac = pathlib.Path(f"restored_flac_{found_flacs+1}.flac")
 	with new_flac.open('wb') as new_file:
-		new_file.write((file_length).to_bytes(4,'little'))
+		new_file.write((file_length).to_bytes(4,'big'))
 		new_file.write(b'fLaC')
 		for data in range(file_length-4):
 			new_file.write(file.read(1))
@@ -76,9 +76,9 @@ with disk.open('rb') as file:
 		#		restore_JPEG(file,found_jpegs)
 		#		found_jpegs += 1
 		
-		if b3 == b'fLaC':
+		if b3+b2+b1+b0 == b'\x66\x4C\x61\x43':
 			print("FLAC gefunden")
-			file_length = int.from_bytes(file.read(4),"little")
+			file_length = int.from_bytes(file.read(4),"big")
 			restore_flac(file,file_length,found_flacs)
 			found_flacs += 1
 		if b3+b2+b1+b0 == b'RIFF':
