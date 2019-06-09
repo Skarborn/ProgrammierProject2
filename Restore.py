@@ -47,6 +47,9 @@ absolutePath = input('Pfad zur .img-Datei eingeben: ')
 disk = pathlib.Path(absolutePath)
 disk_size = disk.stat()[6]
 
+found_jpegs = 0
+found_wavs = 0
+found_avis = 0
 
 with disk.open('rb') as file:
 
