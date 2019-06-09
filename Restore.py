@@ -21,15 +21,14 @@ def restore_avi(file,file_length,found_avis):
 			new_file.write(file.read(1))
 
 # FIND FLACS
-def restore_flac(file,file_length,found_flacs)
+def restore_flac(file,file_length,found_flacs):
 	pass
-	#new_flac = pathlib.Path(f"restored_flac_{found_flacs+1}.wav")
-	#with new_flac.open('wb') as new_file:
-	#	new_file.write(b'RIFF')
-	#	new_file.write((file_length).to_bytes(4,'little'))
-	#	new_file.write(b'FLAC')
-	#	for data in range(file_length-4):
-	#		new_file.write(file.read(1))
+	new_flac = pathlib.Path(f"restored_flac_{found_flacs+1}.flac")
+	with new_flac.open('wb') as new_file:
+		new_file.write((file_length).to_bytes(4,'little'))
+		new_file.write(b'fLaC')
+		for data in range(file_length-4):
+			new_file.write(file.read(1))
 
 
 # FIND AND RESTORE JPEGS
@@ -56,7 +55,7 @@ absolutePath = input('Pfad zur .img-Datei eingeben: ')
 
 disk = pathlib.Path(absolutePath)
 disk_size = disk.stat()[6]
-print(disk_size)
+print(f"Groesse des Speichers: {disk_size/1000/1000} MB.")
 
 found_jpegs = 0
 found_wavs = 0
@@ -70,12 +69,27 @@ with disk.open('rb') as file:
 	b0 = file.read(1)
 
 	for x in range(disk_size - 4):
+		found_wavs=0
+		found_avis=0
+		found_flacs=0
+		found_jpegs=0
+
+		# JPEGs
 		if b1+b0 == b'\xFF\xD8':
 			JPEG_type = file.read(2)
 			if JPEG_type == b'\xFF\xE0':
 				restore_JPEG(file,found_jpegs)
 				found_jpegs += 1
-
+		
+		# FLACs
+		if b3+b2+b1+b0 == b'fLaC':
+			print("FLAC gefunden")
+			file_length = int.from_bytes(file.read(4),"little")
+			print(f"Angebliche File-Groesse: {file_length/1000/1000} MB.")
+			#restore_flac(file,file_length,found_flacs)
+			found_flacs += 1
+		
+		# RIFFs
 		if b3+b2+b1+b0 == b'RIFF':
 			print("RIFF gefunden")
 			file_length = int.from_bytes(file.read(4),"little")
