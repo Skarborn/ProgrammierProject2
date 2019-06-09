@@ -20,6 +20,17 @@ def restore_avi(file,file_length,found_avis):
 		for data in range(file_length-4):
 			new_file.write(file.read(1))
 
+# FIND FLACS
+def restore_flac(file,file_length,found_flacs)
+	pass
+	#new_flac = pathlib.Path(f"restored_flac_{found_flacs+1}.wav")
+	#with new_flac.open('wb') as new_file:
+	#	new_file.write(b'RIFF')
+	#	new_file.write((file_length).to_bytes(4,'little'))
+	#	new_file.write(b'FLAC')
+	#	for data in range(file_length-4):
+	#		new_file.write(file.read(1))
+
 
 # FIND AND RESTORE JPEGS
 def restore_JPEG(file,found_jpegs):
