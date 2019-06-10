@@ -71,6 +71,26 @@ def restore_PNG(file, found_PNGs):
 			'big')))
 		new_file.write(file.read(4))
 
+def restore_PDF(file, found_PDFs):
+	new_PDF = pathlib.Path(f"restored_PDF_{found_PDFs+1}.pdf")
+	with new_PDF.open('wb') as new_file:
+		new_file.write(b'%PDF-')
+		b4 = b'0'
+		b3 = b'0'
+		b2 = b'0'
+		b1 = b'0'
+		b0 = file.read(1)
+		while b4+b3+b2+b1+b0 != b'%%EOF':
+			new_file.write(b0)
+			b4 = b3
+			b3 = b2
+			b2 = b1
+			b1 = b0
+			b0 = file.read(1)
+		new_file.write(b'F')
+
+
+
 absolutePath = input('Pfad zur .img-Datei eingeben: ')
 # /Users/martinberdau/Desktop/HA/4.Semester/AngewandtesProgrammieren/ProgrammierProject2/data_deleted.img
 
@@ -84,6 +104,7 @@ found_wavs = 0
 found_avis = 0
 found_flacs = 0
 found_PNGs = 0
+found_PDFs = 0
 
 with disk.open('rb') as file:
 	# initial 4 bytes that will be looked at to find header
@@ -110,6 +131,18 @@ with disk.open('rb') as file:
 					print("PNG gefunden")
 					restore_PNG(file,found_PNGs)
 					found_PNGs += 1
+
+		# MP3
+		
+
+		# PDF
+		if b3+b2+b1+b0 == b'%PDF':
+			b_add = file.read(1)
+			if b_add == b'-':
+				print("PDF gefunden")
+				restore_PDF(file,found_PDFs)
+				found_PDFs += 1
+
 
 		# FLACs
 		if b3+b2+b1+b0 == b'\x66\x4C\x61\x43':
