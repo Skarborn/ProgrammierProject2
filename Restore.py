@@ -226,7 +226,7 @@ class MainWidget(QtWidgets.QWidget):
 
 
 		self.destination = QtWidgets.QFileDialog.getExistingDirectory(self,
-		 "Choose Directory","/",)
+		 "Choose Directory","/",QtWidgets.QFileDialog.DontUseNativeDialog)
 
 		disk = pathlib.Path(absolutePath)
 		disk_size = disk.stat()[6]
