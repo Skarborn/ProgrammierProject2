@@ -223,7 +223,7 @@ class MainWidget(QtWidgets.QWidget):
 			new_file.write(b'GIF8'+b_adda+b_addb)
 			b1 = b'0'
 			b0 = file.read(1)
-			while b3+b2+b1+b0 != b'\x00\x3B'
+			while b3+b2+b1+b0 != b'\x00\x3B':
 				new_file.write(b0)
 				b1 = b0
 				b0 = file.read(1)
