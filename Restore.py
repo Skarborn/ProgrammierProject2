@@ -223,7 +223,7 @@ class MainWidget(QtWidgets.QWidget):
 			new_file.write(b'GIF8'+b_adda+b_addb)
 			b1 = b'0'
 			b0 = file.read(1)
-			while b3+b2+b1+b0 != b'\x00\x3B':
+			while b1+b0 != b'\x00\x3B':
 				new_file.write(b0)
 				b1 = b0
 				b0 = file.read(1)
@@ -282,10 +282,10 @@ class MainWidget(QtWidgets.QWidget):
 							found_PNGs += 1
 
 				# GIF
-				if b3+b2+b2+b0 == b'GIF8':
+				if b3+b2+b1+b0 == b'GIF8':
 					b_adda = file.read(1)
 					b_addb = file.read(1)
-					if b_adda+b_addb == b'7a' || b_adda+b_addb == b'9a':
+					if b_adda+b_addb == b'9a':
 						print("GIF gefunden")
 						self.restore_GIF(file,found_GIFs,b_adda,b_addb)
 						found_GIFs += 1
