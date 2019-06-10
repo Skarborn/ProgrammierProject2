@@ -23,21 +23,22 @@ def restore_avi(file,file_length,found_avis):
 
 # FIND AND RESTORE JPEGS
 def restore_JPEG(file,found_jpegs):
-	pass
-	# new_JPEG = pathlib.Path(f"restored_jpeg_{found_jpegs+1}.jpeg")
-	# start_img = 1
-	# current = file.read(1)
-	# current_before = b'0'
-	# with new_JPEG.open('wb') as new_file:
-	# 	new_file.write(b'\xFF\xD8')
-	# 	while start_img > 0:
-	# 		current_before = current
-	# 		current = file.read(1)
-	# 		new_file.write(current)
-	# 		if current_before+current == b'\xFF\xD8':
-	# 			start_img += 1
-	# 		if current_before+current == b'\xFF\xD9':
-	# 			start_img -= 1
+
+	print("Hier waere eine JPEG")
+	new_JPEG = pathlib.Path(f"restored_jpeg_{found_jpegs+1}.jpeg")
+	start_img = 1
+	current = file.read(1)
+	current_before = b'0'
+	with new_JPEG.open('wb') as new_file:
+		new_file.write(b'\xFF\xD8')
+		while start_img > 0:
+			current_before = current
+			current = file.read(1)
+			new_file.write(current)
+			if current_before+current == b'\xFF\xD8':
+				start_img += 1
+			if current_before+current == b'\xFF\xD9':
+				start_img -= 1
 
 
 absolutePath = input('Pfad zur .img-Datei eingeben: ')
@@ -46,6 +47,9 @@ absolutePath = input('Pfad zur .img-Datei eingeben: ')
 disk = pathlib.Path(absolutePath)
 disk_size = disk.stat()[6]
 print(disk_size)
+found_jpegs = 0
+found_wavs = 0
+found_avis = 0
 
 
 with disk.open('rb') as file:
