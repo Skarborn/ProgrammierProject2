@@ -11,11 +11,11 @@ This program is the result
 
 To run the program, the user just has to type this in the shell which can be accessed by the programs cmd (windows)
 ```
-\$ python Restore.py
+$ python Restore.py
 ```
 or terminal (macOS and linux) 
 ```
-\$ python Restore.py
+$ python Restore.py
 ```
 The user will afterwards be asked to type in the full path
 
