@@ -207,6 +207,19 @@ def restore_PDF(file,destination,found_PDFs):
 				b0 = file.read(1)
 			new_file.write(b'F')
 
+def restore_GIF(file, destination, found_GIFs, b_adda, b_addb):
+	new_GIF = pathlib.Path(destination+
+		f"/restored_GIF_{found_GIFs+1}.gif")
+	with new_GIF.open('wb') as new_file:
+		new_file.write(b'GIF8'+b_adda+b_addb)
+		b1 = b'0'
+		b0 = file.read(1)
+		while b1+b0 != b'\x00\x3B':
+			new_file.write(b0)
+			b1 = b0
+			b0 = file.read(1)
+		new_file.write(b'\x3B')
+
 # START
 def main():
 
@@ -229,7 +242,8 @@ def main():
 	found_AVIs = 0
 	found_FLACs = 0
 	found_PNGs = 0
-	found_PDFs = 0
+	found_PDFs =  0
+	found_GIFs = 0
 
 	with disk.open('rb') as file:
 		# initial 4 bytes that will be looked at to find header
@@ -257,8 +271,14 @@ def main():
 						restore_PNG(file,destination,found_PNGs)
 						found_PNGs += 1
 
-			# MP3
-			
+			# GIF
+			if b3+b2+b1+b0 == b'GIF8':
+				b_adda = file.read(1)
+				b_addb = file.read(1)
+				if b_adda+b_addb == b'9a':
+					print("GIF gefunden")
+					restore_GIF(file,destination,found_GIFs,b_adda,b_addb)
+					found_GIFs += 1
 
 			# PDF
 			if b3+b2+b1+b0 == b'%PDF':
