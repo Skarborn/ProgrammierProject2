@@ -75,6 +75,8 @@ def restore_PDF(file, found_PDFs):
 	new_PDF = pathlib.Path(f"restored_PDF_{found_PDFs+1}.pdf")
 	with new_PDF.open('wb') as new_file:
 		new_file.write(b'%PDF-')
+		b6 = b'0'
+		b5 = b'0'
 		b4 = b'0'
 		b3 = b'0'
 		b2 = b'0'
@@ -82,12 +84,25 @@ def restore_PDF(file, found_PDFs):
 		b0 = file.read(1)
 		while b4+b3+b2+b1+b0 != b'%%EOF':
 			new_file.write(b0)
+			b6 = b5
+			b5 = b4
 			b4 = b3
 			b3 = b2
 			b2 = b1
 			b1 = b0
 			b0 = file.read(1)
 		new_file.write(b'F')
+		if b6 == b'\x30':
+			b0 = file.read(1)
+			while b4+b3+b2+b1+b0 != b'%%EOF':
+				new_file.write(b0)
+				b4 = b3
+				b3 = b2
+				b2 = b1
+				b1 = b0
+				b0 = file.read(1)
+			new_file.write(b'F')
+
 
 
 
