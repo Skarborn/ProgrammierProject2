@@ -1,27 +1,61 @@
 import pathlib
 
-# FIND AND RESTORE WAVS
-def restore_wave(file,file_length,found_wavs):
-	new_wav = pathlib.Path(f"restored_wav_{found_wavs+1}.wav")
+
+def restore_wave(file,file_length,found_WAVEs):
+	""" Restores a found WAVE-file.
+
+	If a file of this type has been found, it will be written to the current
+	location.
+
+	Parameters
+	----------
+	file
+		the img-file with deleted files
+
+	file_length
+		amount of bytes after 'RIFF'-header
+
+	found_WAVEs
+		amount of WAVEs that have been found.
+		Used for numbering restored files.
+	"""
+	new_wav = pathlib.Path(f"restored_wav_{found_WAVEs+1}.wav")
 	with new_wav.open('wb') as new_file:
 		new_file.write(b'RIFF')
 		new_file.write((file_length).to_bytes(4,'little'))
 		new_file.write(b'WAVE')
 		new_file.write(file.read(file_length-4))
 
-# FIND AVIS
-def restore_avi(file,file_length,found_avis):
-	new_avi = pathlib.Path(f"restored_avi_{found_avis+1}.avi")
+
+def restore_avi(file,file_length,found_AVIs):
+	""" Restores a found AVI-file.
+
+	If a file of this type has been found, it will be written to the current
+	location.
+
+	Parameters
+	----------
+	file
+		the img-file with deleted files
+
+	file_length
+		amount of bytes after 'RIFF'-header
+
+	found_AVIs
+		amount of AVIs that have been found.
+		Used for numbering restored files.
+	 """
+	new_avi = pathlib.Path(f"restored_avi_{found_AVIs+1}.avi")
 	with new_avi.open('wb') as new_file:
 		new_file.write(b'RIFF')
 		new_file.write((file_length).to_bytes(4,'little'))
 		new_file.write(b'AVI ')
 		new_file.write(file.read(file_length-4))
 
-# FIND FLACS
-def restore_flac(file,file_length,found_flacs):
+
+def restore_flac(file,file_length,found_FLACs):
 	pass
-	# new_flac = pathlib.Path(f"restored_flac_{found_flacs+1}.flac")
+	# new_flac = pathlib.Path(f"restored_flac_{found_FLACs+1}.flac")
 	# with new_flac.open('wb') as new_file:
 	# 	new_file.write((file_length).to_bytes(4,'big'))
 	# 	new_file.write(b'fLaC')
@@ -29,9 +63,26 @@ def restore_flac(file,file_length,found_flacs):
 	# 		new_file.write(file.read(1))
 
 
-# FIND AND RESTORE JPEGS
-def restore_JPEG(file,found_jpegs,b1,b0):
-	new_JPEG = pathlib.Path(f"restored_jpeg_{found_jpegs+1}.jpeg")
+
+def restore_JPEG(file,found_JPEGs,b1,b0):
+	""" Restores a found JPEG-file.
+
+	If a file of this type has been found, it will be written to the current
+	location.
+
+	Parameters
+	----------
+	file
+		the img-file with deleted files
+
+	found_JPEGs
+		amount of JPEGs that have been found.
+		Used for numbering restored files.
+
+	b1, b0
+		current byte sequence that has been read. For jpegs: xFF xE0
+	 """
+	new_JPEG = pathlib.Path(f"restored_jpeg_{found_JPEGs+1}.jpeg")
 	with new_JPEG.open('wb') as new_file:
 		new_file.write(b'\xFF\xD8'+b1+b0)
 
@@ -51,6 +102,20 @@ def restore_JPEG(file,found_jpegs,b1,b0):
 			new_file.write(b0)
 
 def restore_PNG(file, found_PNGs):
+	""" Restores a found PNG-file.
+
+	If a file of this type has been found, it will be written to the current
+	location.
+
+	Parameters
+	----------
+	file
+		the img-file with deleted files
+
+	found_PNGs
+		amount of PNGs that have been found.
+		Used for numbering restored files.
+	 """
 	new_PNG = pathlib.Path(f"restored_png_{found_PNGs+1}.png")
 	with new_PNG.open('wb') as new_file:
 		new_file.write(b'\x89\x50\x4E\x47\x0D\x0A\x1A\x0A')
@@ -72,6 +137,23 @@ def restore_PNG(file, found_PNGs):
 		new_file.write(file.read(4))
 
 def restore_PDF(file, found_PDFs):
+	""" Restores a found PDF-file.
+
+	If a file of this type has been found, it will be written to the current
+	location.
+
+	Parameters
+	----------
+	file
+		the img-file with deleted files
+
+	found_PDFs
+		amount of PDFs that have been found.
+		Used for numbering restored files.
+
+	b6, b5, b4, b3, b2, b1, b0
+		current byte sequence that's being analysed
+	 """
 	new_PDF = pathlib.Path(f"restored_PDF_{found_PDFs+1}.pdf")
 	with new_PDF.open('wb') as new_file:
 		new_file.write(b'%PDF-')
@@ -104,7 +186,7 @@ def restore_PDF(file, found_PDFs):
 			new_file.write(b'F')
 
 
-
+# START
 
 absolutePath = input('Pfad zur .img-Datei eingeben: ')
 # /Users/martinberdau/Desktop/HA/4.Semester/AngewandtesProgrammieren/ProgrammierProject2/data_deleted.img
@@ -114,10 +196,10 @@ disk_size = disk.stat()[6]
 
 print(f"Groesse des Speichers: {disk_size/1000/1000} MB.")
 
-found_jpegs = 0
-found_wavs = 0
-found_avis = 0
-found_flacs = 0
+found_JPEGs = 0
+found_WAVEs = 0
+found_AVIs = 0
+found_FLACs = 0
 found_PNGs = 0
 found_PDFs = 0
 
@@ -133,8 +215,8 @@ with disk.open('rb') as file:
 		# JPEGs
 		if b3+b2+b1+b0 == b'\xFF\xD8\xFF\xE0':
 			print("JPEG gefunden")
-			restore_JPEG(file,found_jpegs,b1,b0)
-			found_jpegs += 1
+			restore_JPEG(file,found_JPEGs,b1,b0)
+			found_JPEGs += 1
 
 		# PNGs
 		if b3+b2+b1+b0 == b'\x89\x50\x4E\x47':
@@ -163,8 +245,8 @@ with disk.open('rb') as file:
 		if b3+b2+b1+b0 == b'\x66\x4C\x61\x43':
 			print("FLAC gefunden")
 			file_length = int.from_bytes(file.read(4),"big")
-			restore_flac(file,file_length,found_flacs)
-			found_flacs += 1
+			restore_flac(file,file_length,found_FLACs)
+			found_FLACs += 1
 		
 		# RIFFs
 		if b3+b2+b1+b0 == b'RIFF':
@@ -173,12 +255,12 @@ with disk.open('rb') as file:
 			riff_type = file.read(4)
 			if riff_type == b'WAVE':
 				print("WAVE-Datei")
-				restore_wave(file,file_length,found_wavs)
-				found_wavs += 1
+				restore_wave(file,file_length,found_WAVEs)
+				found_WAVEs += 1
 			if riff_type == b'AVI ':
 				print("AVI-Datei")
-				restore_avi(file,file_length,found_avis)
-				found_avis += 1
+				restore_avi(file,file_length,found_AVIs)
+				found_AVIs += 1
 
 		b3 = b2
 		b2 = b1
