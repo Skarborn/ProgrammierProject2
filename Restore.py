@@ -38,7 +38,8 @@ def restore_JPEG(file,found_jpegs,b1,b0):
 		while b1 + b0 != b'\xFF\xDA':
 			block_length = file.read(2)
 			new_file.write(block_length)
-			new_file.write(file.read(int.from_bytes(block_length, 'big')-2))
+			new_file.write(file.read(int.from_bytes(block_length, \
+				'big')-2))
 
 			b1 = file.read(1)
 			b0 = file.read(1)
@@ -48,6 +49,27 @@ def restore_JPEG(file,found_jpegs,b1,b0):
 			b1 = b0
 			b0 = file.read(1)
 			new_file.write(b0)
+
+def restore_PNG(file, found_PNGs):
+	new_PNG = pathlib.Path(f"restored_png_{found_PNGs+1}.png")
+	with new_PNG.open('wb') as new_file:
+		new_file.write(b'\x89\x50\x4E\x47\x0D\x0A\x1A\x0A')
+		block_length = file.read(4)
+		chunk_name = file.read(4)
+		while chunk_name != b'IEND':
+			new_file.write(block_length)
+			new_file.write(chunk_name)
+			new_file.write(file.read(int.from_bytes(block_length, \
+				'big')))
+			new_file.write(file.read(4))
+			block_length = file.read(4)
+			chunk_name = file.read(4)
+
+		new_file.write(block_length)
+		new_file.write(chunk_name)
+		new_file.write(file.read(int.from_bytes(block_length, \
+			'big')))
+		new_file.write(file.read(4))
 
 absolutePath = input('Pfad zur .img-Datei eingeben: ')
 # /Users/martinberdau/Desktop/HA/4.Semester/AngewandtesProgrammieren/ProgrammierProject2/data_deleted.img
@@ -60,7 +82,8 @@ print(f"Groesse des Speichers: {disk_size/1000/1000} MB.")
 found_jpegs = 0
 found_wavs = 0
 found_avis = 0
-found_flacs=0
+found_flacs = 0
+found_PNGs = 0
 
 with disk.open('rb') as file:
 	# initial 4 bytes that will be looked at to find header
@@ -76,7 +99,19 @@ with disk.open('rb') as file:
 			print("JPEG gefunden")
 			restore_JPEG(file,found_jpegs,b1,b0)
 			found_jpegs += 1
-		
+
+		# PNGs
+		if b3+b2+b1+b0 == b'\x89\x50\x4E\x47':
+				b3 = file.read(1)
+				b2 = file.read(1)
+				b1 = file.read(1)
+				b0 = file.read(1)
+				if b3+b2+b1+b0 == b'\x0D\x0A\x1A\x0A':
+					print("PNG gefunden")
+					restore_PNG(file,found_PNGs)
+					found_PNGs += 1
+
+		# FLACs
 		if b3+b2+b1+b0 == b'\x66\x4C\x61\x43':
 			print("FLAC gefunden")
 			file_length = int.from_bytes(file.read(4),"big")
