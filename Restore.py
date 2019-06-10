@@ -23,12 +23,12 @@ def restore_avi(file,file_length,found_avis):
 # FIND FLACS
 def restore_flac(file,file_length,found_flacs):
 	pass
-	new_flac = pathlib.Path(f"restored_flac_{found_flacs+1}.flac")
-	with new_flac.open('wb') as new_file:
-		new_file.write((file_length).to_bytes(4,'big'))
-		new_file.write(b'fLaC')
-		for data in range(file_length-4):
-			new_file.write(file.read(1))
+	# new_flac = pathlib.Path(f"restored_flac_{found_flacs+1}.flac")
+	# with new_flac.open('wb') as new_file:
+	# 	new_file.write((file_length).to_bytes(4,'big'))
+	# 	new_file.write(b'fLaC')
+	# 	for data in range(file_length-4):
+	# 		new_file.write(file.read(1))
 
 
 # FIND AND RESTORE JPEGS
@@ -60,6 +60,7 @@ print(f"Groesse des Speichers: {disk_size/1000/1000} MB.")
 found_jpegs = 0
 found_wavs = 0
 found_avis = 0
+found_flacs=0
 
 with disk.open('rb') as file:
 	# initial 4 bytes that will be looked at to find header
@@ -69,10 +70,6 @@ with disk.open('rb') as file:
 	b0 = file.read(1)
 
 	for x in range(disk_size - 4):
-		found_wavs=0
-		found_avis=0
-		found_flacs=0
-		found_jpegs=0
 
 		# JPEGs
 		if b1+b0 == b'\xFF\xD8':
@@ -81,19 +78,10 @@ with disk.open('rb') as file:
 				restore_JPEG(file,found_jpegs)
 				found_jpegs += 1
 		
-<<<<<<< HEAD
 		if b3+b2+b1+b0 == b'\x66\x4C\x61\x43':
 			print("FLAC gefunden")
 			file_length = int.from_bytes(file.read(4),"big")
 			restore_flac(file,file_length,found_flacs)
-=======
-		# FLACs
-		if b3+b2+b1+b0 == b'fLaC':
-			print("FLAC gefunden")
-			file_length = int.from_bytes(file.read(4),"little")
-			print(f"Angebliche File-Groesse: {file_length/1000/1000} MB.")
-			#restore_flac(file,file_length,found_flacs)
->>>>>>> ff0c34e7b1485535d0552be1ad1456a8b0663215
 			found_flacs += 1
 		
 		# RIFFs
