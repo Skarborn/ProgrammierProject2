@@ -33,8 +33,6 @@ def restore_flac(file,file_length,found_flacs):
 
 # FIND AND RESTORE JPEGS
 def restore_JPEG(file,found_jpegs,b1,b0):
-
-	print("Hier waere eine JPEG")
 	new_JPEG = pathlib.Path(f"restored_jpeg_{found_jpegs+1}.jpeg")
 	with new_JPEG.open('wb') as new_file:
 		new_file.write(b'\xFF\xD8'+b1+b0)
@@ -77,6 +75,7 @@ with disk.open('rb') as file:
 
 		# JPEGs
 		if b3+b2+b1+b0 == b'\xFF\xD8\xFF\xE0':
+			print("JPEG gefunden")
 			restore_JPEG(file,found_jpegs,b1,b0)
 			found_jpegs += 1
 		
