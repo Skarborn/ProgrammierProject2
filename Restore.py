@@ -169,8 +169,8 @@ class MainWidget(QtWidgets.QWidget):
 	def restore_PDF(self,file, found_PDFs):
 		""" Restores a found PDF-file.
 
-		If a file of this type has been found, it will be written to the current
-		location.
+		If a file of this type has been found, it will be written to 
+		the current location.
 
 		Parameters
 		----------
@@ -216,17 +216,30 @@ class MainWidget(QtWidgets.QWidget):
 					b0 = file.read(1)
 				new_file.write(b'F')
 
+	def restore_GIF(self, file, found_GIFs, b_adda, b_addb):
+		new_GIF = pathlib.Path(self.destination+
+			f"/restored_GIF_{found_GIFs+1}.gif")
+		with new_GIF.open('wb') as new_file:
+			new_file.write(b'GIF8'+b_adda+b_addb)
+			b1 = b'0'
+			b0 = file.read(1)
+			while b3+b2+b1+b0 != b'\x00\x3B'
+				new_file.write(b0)
+				b1 = b0
+				b0 = file.read(1)
+			new_file.write(b'\x3B')
+
 
 	# START
 	def launch_programm(self):
 		self.button.setEnabled(False)
 
-		absolutePath = QtWidgets.QFileDialog.getOpenFileName(self, "Choose img-File",
-									   "/","Images (*.img)")[0]
+		absolutePath = QtWidgets.QFileDialog.getOpenFileName(self, 
+			"Choose img-File", "/" , "Images (*.img)")[0]
 
 
 		self.destination = QtWidgets.QFileDialog.getExistingDirectory(self,
-		 "Choose Directory","/",)
+		 "Choose Directory","/")
 
 		disk = pathlib.Path(absolutePath)
 		disk_size = disk.stat()[6]
@@ -239,6 +252,7 @@ class MainWidget(QtWidgets.QWidget):
 		found_FLACs = 0
 		found_PNGs = 0
 		found_PDFs = 0
+		found_GIFs = 0
 
 		with disk.open('rb') as file:
 			# initial 4 bytes that will be looked at to find header
@@ -266,7 +280,14 @@ class MainWidget(QtWidgets.QWidget):
 							self.restore_PNG(file,found_PNGs)
 							found_PNGs += 1
 
-				# MP3
+				# GIF
+				if b3+b2+b2+b0 == b'GIF8':
+					b_adda = file.read(1)
+					b_addb = file.read(1)
+					if b_adda+b_addb == b'7a' || b_adda+b_addb == b'9a':
+						print("GIF gefunden")
+						self.restore_GIF(file,found_GIFs,b_adda,b_addb)
+						found_GIFs += 1
 				
 
 				# PDF
