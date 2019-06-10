@@ -7,8 +7,7 @@ def restore_wave(file,file_length,found_wavs):
 		new_file.write(b'RIFF')
 		new_file.write((file_length).to_bytes(4,'little'))
 		new_file.write(b'WAVE')
-		for data in range(file_length-4):
-			new_file.write(file.read(1))
+		new_file.write(file.read(file_length-4))
 
 # FIND AVIS
 def restore_avi(file,file_length,found_avis):
@@ -17,8 +16,7 @@ def restore_avi(file,file_length,found_avis):
 		new_file.write(b'RIFF')
 		new_file.write((file_length).to_bytes(4,'little'))
 		new_file.write(b'AVI ')
-		for data in range(file_length-4):
-			new_file.write(file.read(1))
+		new_file.write(file.read(file_length-4))
 
 # FIND FLACS
 def restore_flac(file,file_length,found_flacs):
@@ -103,4 +101,3 @@ with disk.open('rb') as file:
 		b2 = b1
 		b1 = b0
 		b0 = file.read(1)
-
