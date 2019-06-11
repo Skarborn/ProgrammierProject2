@@ -4,7 +4,9 @@ Further information can be found in the functions below.
 Copyright (c) 2019
 
 Authors: Martin Berdau, Johannes Ruesing, Tammo Sander
-Licence: 
+Licence (BSD):
+It is allowed to use the code in any context, but the license has to be maintained
+and the authors have to be mentioned in the source code.
 '''
 
 
