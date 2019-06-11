@@ -4,9 +4,11 @@ Further information can be found in the functions below.
 Copyright (c) 2019
 
 Authors: Martin Berdau, Johannes Ruesing, Tammo Sander
-This code is published under the terms of the BSD license.
-'''
 
+Licence (BSD):
+It is allowed to use the code in any context, but the license has to
+be maintained and the authors have to be mentioned in the source code.
+'''
 
 import pathlib
 import time
@@ -16,19 +18,19 @@ from PySide2 import QtWidgets
 def restore_wave(file, destination, file_length, found_WAVEs):
 	""" Restores a found WAVE-file.
 
-	If a file of this type has been found, it will be written to the current
-	location.
+	If a file of this type has been found, it will be written to the
+	current location.
 
 	Parameters
 	----------
 	file
-		the img-file with deleted files
+		the img-file with deleted files.
 
 	destination
-		archive in which file is writen
+		archive in which file is writen.
 
 	file_length
-		length in bytes after 'RIFF'-header
+		length in bytes after 'RIFF'-header.
 
 	found_WAVEs
 		amount of WAVEs that have been found.
@@ -46,19 +48,19 @@ def restore_wave(file, destination, file_length, found_WAVEs):
 def restore_avi(file, destination, file_length, found_AVIs):
 	""" Restores a found AVI-file.
 
-	If a file of this type has been found, it will be written to the current
-	location.
+	If a file of this type has been found, it will be written to the
+	current location.
 
 	Parameters
 	----------
 	file
-		the img-file with deleted files
+		the img-file with deleted files.
 
 	destination
-		archive in which file is writen
+		archive in which file is writen.
 
 	file_length
-		length in bytes after 'RIFF'-header
+		length in bytes after 'RIFF'-header.
 
 	found_AVIs
 		amount of AVIs that have been found.
@@ -75,16 +77,16 @@ def restore_avi(file, destination, file_length, found_AVIs):
 def restore_JPEG(file, destination, found_JPEGs, b1, b0):
 	""" Restores a found JPEG-file.
 
-	If a file of this type has been found, it will be written to the current
-	location.
+	If a file of this type has been found, it will be written to the
+	current location.
 
 	Parameters
 	----------
 	file
-		the img-file with deleted files
+		the img-file with deleted files.
 
 	destination
-		archive in which file is writen
+		archive in which file is writen.
 
 	found_JPEGs
 		amount of JPEGs that have been found.
@@ -116,16 +118,16 @@ def restore_JPEG(file, destination, found_JPEGs, b1, b0):
 def restore_PNG(file, destination, found_PNGs):
 	""" Restores a found PNG-file.
 
-	If a file of this type has been found, it will be written to the current
-	location.
+	If a file of this type has been found, it will be written to the
+	current location.
 
 	Parameters
 	----------
 	file
-		the img-file with deleted files
+		the img-file with deleted files.
 
 	destination
-		archive in which file is writen
+		archive in which file is writen.
 
 	found_PNGs
 		amount of PNGs that have been found.
@@ -155,16 +157,16 @@ def restore_PNG(file, destination, found_PNGs):
 def restore_PDF(file, destination, found_PDFs):
 	""" Restores a found PDF-file.
 
-	If a file of this type has been found, it will be written to the current
-	location.
+	If a file of this type has been found, it will be written to the
+	current location.
 
 	Parameters
 	----------
 	file
-		the img-file with deleted files
+		the img-file with deleted files.
 
 	destination
-		archive in which file is writen
+		archive in which file is writen.
 
 	found_PDFs
 		amount of PDFs that have been found.
@@ -205,23 +207,24 @@ def restore_PDF(file, destination, found_PDFs):
 def restore_GIF(file, destination, found_GIFs, b_adda, b_addb):
 	""" Restores a found GIF-file.
 
-	If a file of this type has been found, it will be written to the current
-	location.
+	If a file of this type has been found, it will be written to the
+	current location.
 
 	Parameters
 	----------
 	file
-		the img-file with deleted files
+		the img-file with deleted files.
 
 	destination
-		archive in which file is writen
+		archive in which file is writen.
 
 	found_GIFs
 		amount of GIFs that have been found.
 		Used for numbering restored files.
 
 	b_adda & b_addb
-		to store two extra bytes, which define which version of GIF is used.
+		to store two extra bytes, which define which version of GIF
+		is used.
 
 
 	 """
@@ -238,9 +241,24 @@ def restore_GIF(file, destination, found_GIFs, b_adda, b_addb):
 		new_file.write(b'\x3B')
 
 def results(found_WAVEs, found_AVIs, found_JPEGs, found_PNGs,
-	found_PDFs, found_GIFs):
+	found_PDFs, found_GIFs, time_used):
+	""" Prints results on the console.
+
+	This function prints out the amount of restored files.
+
+	Parameters
+	----------
+	found_FILEs
+		amount of files of type FILE that have been found.
+
+	time_used
+		time used running the programm.
+
+
+	 """
 	print("--------------------")
 	print("Bericht: ")
+	print(f"Dauer: {round(time_used//60)} Minuten und {round(time_used%60)} Sekunden")
 	print(f"Hergestellte WAVE: {found_WAVEs}")
 	print(f"Hergestellte AVI: {found_AVIs}")
 	print(f"Hergestellte JPEG: {found_JPEGs}")
@@ -281,7 +299,6 @@ def main():
 	and the byte before that b1 and so on.
 	By combining those bytes a byte sequence like for example
 	b'RIFF' can be formed and found on the disk.
-
 	 """
 	app = QtWidgets.QApplication()
 
@@ -305,6 +322,8 @@ def main():
 	found_PNGs = 0
 	found_PDFs =  0
 	found_GIFs = 0
+
+	time_start = time.time()
 
 	with disk.open('rb') as file:
 		# initial 4 bytes that will be looked at to find header
@@ -372,8 +391,10 @@ def main():
 			b0 = file.read(1)
 
 
+	time_end = time.time()
+	time_used = time_end-time_start
 	results(found_WAVEs, found_AVIs, found_JPEGs, found_PNGs,
-	found_PDFs, found_GIFs)
+	found_PDFs, found_GIFs, time_used)
 
 if __name__== "__main__":
   main()
