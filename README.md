@@ -1,6 +1,6 @@
 # Programming Task via Python to restore deleted objects from an img-file
-This program is the result of the task to create a Python script which restores deleted files from a copy of a disk (img-file). By deleting files of any kind, not everything but only the file-names are deallocated. This is the reason why it is possible to retrieve the data just by finding it and refilling the missing parts, like the given program Restore.py does. 
-The script is able to restore the formats:
+This program is the result of the task to create a Python script which restores deleted files from a copy of a disk (img-file). By deleting files of any kind (without destroying them physically), not everything but only the file-names are deallocated. This is the reason why it is possible to restore the data just by finding and refilling the missing parts, like the given program Restore.py does. 
+The program is able to restore the formats:
 * PDF
 * JPEG
 * PNG
@@ -17,7 +17,7 @@ or (because of the varying pip versions):
 ```
 $ pip3 install PySide2
 ```
-It may occurr that the modules time and pathlib are not pre-installed as well, therefore they have to be installed in the way PySide2 was added.
+It may occur that the modules time and pathlib are not pre-installed as well, therefore they have to be installed in the way PySide2 was added.
 Then the user has to download the zip-file of the
  [GitHub-homepage](https://github.com/Skarborn/ProgrammierProject2) and to run it from the path, where the file is located (see **Running the Program**). 
 
@@ -31,7 +31,7 @@ Otherwise terminal (macOS and linux) has to be used to run the Restore-file
 ```
 $ python3 Restore.py
 ```
-The user will afterwards be asked to state, where the img-file, which has to be restored, is positioned by clicking on the opened display. Afterwards another window of the same kind is opened for the user to decide where the restored data should be saved.
+The user will afterwards be asked to state, where the img-file, which has to be restored, is positioned by clicking on the opened display. Then another window is opened for the user to decide where the restored data should be saved.
 
 ## Built With
 * [Python3](https://www.python.org/downloads/) - Programed and runned with
@@ -39,14 +39,14 @@ The user will afterwards be asked to state, where the img-file, which has to be 
 
 ## Versioning
 Version 1.0
-This program is finished and therefore will not be updated again.
+This program is finished at the moment, updates might be uploaded sometimes.
 
 ## Authors
 * **Martin Berdau** - *Programmer* -
 [MartinBerdau](https://github.com/MartinBerdau)
 * **Tammo Sander** - *Programmer* - 
 [TammoSan](https://github.com/TammoSan)
-* **Johannes Rüsing** - *Programmer* -
+* **Johannes RÃ¼sing** - *Programmer* -
 [Skarborn](https://github.com/Skarborn)
 
 ## License
