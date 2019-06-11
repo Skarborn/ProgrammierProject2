@@ -4,7 +4,7 @@ Further information can be found in the functions below.
 Copyright (c) 2019
 
 Authors: Martin Berdau, Johannes Ruesing, Tammo Sander
-Licence: 
+This code is published under the terms of the BSD license.
 '''
 
 
@@ -13,7 +13,7 @@ import time
 from PySide2 import QtWidgets
 
 
-def restore_wave(file,destination,file_length,found_WAVEs):
+def restore_wave(file, destination, file_length, found_WAVEs):
 	""" Restores a found WAVE-file.
 
 	If a file of this type has been found, it will be written to the current
@@ -28,7 +28,7 @@ def restore_wave(file,destination,file_length,found_WAVEs):
 		archive in which file is writen
 
 	file_length
-		amount of bytes after 'RIFF'-header
+		length in bytes after 'RIFF'-header
 
 	found_WAVEs
 		amount of WAVEs that have been found.
@@ -43,7 +43,7 @@ def restore_wave(file,destination,file_length,found_WAVEs):
 		new_file.write(file.read(file_length-4))
 
 
-def restore_avi(file,destination,file_length,found_AVIs):
+def restore_avi(file, destination, file_length, found_AVIs):
 	""" Restores a found AVI-file.
 
 	If a file of this type has been found, it will be written to the current
@@ -58,7 +58,7 @@ def restore_avi(file,destination,file_length,found_AVIs):
 		archive in which file is writen
 
 	file_length
-		amount of bytes after 'RIFF'-header
+		length in bytes after 'RIFF'-header
 
 	found_AVIs
 		amount of AVIs that have been found.
@@ -72,7 +72,7 @@ def restore_avi(file,destination,file_length,found_AVIs):
 		new_file.write(b'AVI ')
 		new_file.write(file.read(file_length-4))
 
-def restore_JPEG(file,destination,found_JPEGs,b1,b0):
+def restore_JPEG(file, destination, found_JPEGs, b1, b0):
 	""" Restores a found JPEG-file.
 
 	If a file of this type has been found, it will be written to the current
@@ -113,7 +113,7 @@ def restore_JPEG(file,destination,found_JPEGs,b1,b0):
 			b0 = file.read(1)
 			new_file.write(b0)
 
-def restore_PNG(file,destination,found_PNGs):
+def restore_PNG(file, destination, found_PNGs):
 	""" Restores a found PNG-file.
 
 	If a file of this type has been found, it will be written to the current
@@ -152,7 +152,7 @@ def restore_PNG(file,destination,found_PNGs):
 			'big')))
 		new_file.write(file.read(4))
 
-def restore_PDF(file,destination,found_PDFs):
+def restore_PDF(file, destination, found_PDFs):
 	""" Restores a found PDF-file.
 
 	If a file of this type has been found, it will be written to the current
@@ -220,11 +220,10 @@ def restore_GIF(file, destination, found_GIFs, b_adda, b_addb):
 		amount of GIFs that have been found.
 		Used for numbering restored files.
 
-	b_adda
-		add description
+	b_adda & b_addb
+		to store two extra bytes, which define which version of GIF is used.
 
-	b_addb
-		add descirption
+
 	 """
 	new_GIF = pathlib.Path(destination+
 		f"/restored_GIF_{found_GIFs+1}.gif")
@@ -237,6 +236,17 @@ def restore_GIF(file, destination, found_GIFs, b_adda, b_addb):
 			b1 = b0
 			b0 = file.read(1)
 		new_file.write(b'\x3B')
+
+def results(found_WAVEs, found_AVIs, found_JPEGs, found_PNGs,
+	found_PDFs, found_GIFs):
+	print("--------------------")
+	print("Bericht: ")
+	print(f"Hergestellte WAVE: {found_WAVEs}")
+	print(f"Hergestellte AVI: {found_AVIs}")
+	print(f"Hergestellte JPEG: {found_JPEGs}")
+	print(f"Hergestellte PNG: {found_PNGs}")
+	print(f"Hergestellte PDF: {found_PDFs}")
+	print(f"Hergestellte GIF: {found_GIFs}")
 
 # START
 def main():
@@ -256,7 +266,10 @@ def main():
 
 	After starting the programm the user will be asked to point
 	to the IMG-File. Afterwards the user has to determine the
-	destination were the files will be written to.
+	destination were the files will be written to and the programm
+	will start.
+
+	After the programm is done, a result message will be displayed.
 
 	The main-function and some restore-function use a similar
 	approach to find important byte sequences like the magic numbers
@@ -273,8 +286,8 @@ def main():
 	app = QtWidgets.QApplication()
 
 	# path to IMG-file
-	absolutePath = QtWidgets.QFileDialog.getOpenFileName(None, "Choose img-File",
-								   "/","Images (*.img)")[0]
+	absolutePath = QtWidgets.QFileDialog.getOpenFileName(None,
+		"Choose img-File","/","Images (*.img)")[0]
 
 	# path to destination archive
 	destination = QtWidgets.QFileDialog.getExistingDirectory(None,
@@ -286,10 +299,9 @@ def main():
 	print(f"Groesse des Speichers: {disk_size/1000/1000} MB.")
 
 	# file counters
-	found_JPEGs = 0
 	found_WAVEs = 0
 	found_AVIs = 0
-	found_FLACs = 0
+	found_JPEGs = 0
 	found_PNGs = 0
 	found_PDFs =  0
 	found_GIFs = 0
@@ -324,7 +336,7 @@ def main():
 			if b3+b2+b1+b0 == b'GIF8':
 				b_adda = file.read(1)
 				b_addb = file.read(1)
-				if b_adda+b_addb == b'9a':
+				if (b_adda+b_addb == b'9a')|(b_adda+b_addb == b'7a'):
 					print("GIF gefunden")
 					restore_GIF(file,destination,found_GIFs,b_adda,b_addb)
 					found_GIFs += 1
@@ -341,10 +353,14 @@ def main():
 			if b3+b2+b1+b0 == b'RIFF':
 				file_length = int.from_bytes(file.read(4),"little")
 				riff_type = file.read(4)
+				
+				# WAVE
 				if riff_type == b'WAVE':
 					print("WAVE gefunden")
 					restore_wave(file,destination,file_length,found_WAVEs)
 					found_WAVEs += 1
+				
+				# AVI
 				if riff_type == b'AVI ':
 					print("AVI gefunden")
 					restore_avi(file,destination,file_length,found_AVIs)
@@ -355,7 +371,9 @@ def main():
 			b1 = b0
 			b0 = file.read(1)
 
-	app.exec_()
+
+	results(found_WAVEs, found_AVIs, found_JPEGs, found_PNGs,
+	found_PDFs, found_GIFs)
 
 if __name__== "__main__":
   main()
