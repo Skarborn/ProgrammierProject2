@@ -1,6 +1,6 @@
 # Programming Task via Python to restore deleted objects from an img-file
-This program is the result of the task to create a Python script which restores deleted files from a copy of a disk (img-file). By deleting files of any kind (without destroying them physically), not everything but only the file-names are deallocated. This is the reason why it is possible to retrieve the data just by finding it and refilling the missing parts, like the given program Restore.py does. 
-The script is able to restore the formats:
+This program is the result of the task to create a Python script which restores deleted files from a copy of a disk (img-file). By deleting files of any kind (without destroying them physically), not everything but only the file-names are deallocated. This is the reason why it is possible to restore the data just by finding and refilling the missing parts, like the given program Restore.py does. 
+The program is able to restore the formats:
 * PDF
 * JPEG
 * PNG
@@ -17,7 +17,7 @@ or (because of the varying pip versions):
 ```
 $ pip3 install PySide2
 ```
-It may occurr that the modules time and pathlib are not pre-installed as well, therefore they have to be installed in the way PySide2 was added.
+It may occur that the modules time and pathlib are not pre-installed as well, therefore they have to be installed in the way PySide2 was added.
 Then the user has to download the zip-file of the
  [GitHub-homepage](https://github.com/Skarborn/ProgrammierProject2) and to run it from the path, where the file is located (see **Running the Program**). 
 
