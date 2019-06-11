@@ -4,7 +4,7 @@ The script is able to restore the formats:
 * PDF
 * JPEG
 * PNG
-*WAVE
+* WAVE
 * AVI
 * GIF
 
@@ -52,3 +52,4 @@ This program is finished and therefore will not be updated again.
 ## License
 **BSD-License**:
 It is allowed to use the code in any context, but the license has to be maintained and the authors have to be mentioned in the source code.
+
