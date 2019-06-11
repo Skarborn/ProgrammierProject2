@@ -1,3 +1,13 @@
+''' This script restores deleted files from a disc
+Further information can be found in the functions below.
+
+Copyright (c) 2019
+
+Authors: Martin Berdau, Johannes Ruesing, Tammo Sander
+Licence: 
+'''
+
+
 import pathlib
 import time
 from PySide2 import QtWidgets
@@ -61,18 +71,6 @@ def restore_avi(file,destination,file_length,found_AVIs):
 		new_file.write((file_length).to_bytes(4,'little'))
 		new_file.write(b'AVI ')
 		new_file.write(file.read(file_length-4))
-
-
-def restore_flac(file,destination,file_length,found_FLACs):
-	pass
-	# new_flac = pathlib.Path(f"restored_flac_{found_FLACs+1}.flac")
-	# with new_flac.open('wb') as new_file:
-	#   new_file.write((file_length).to_bytes(4,'big'))
-	#   new_file.write(b'fLaC')
-	#   for data in range(file_length-4):
-	#       new_file.write(file.read(1))
-
-
 
 def restore_JPEG(file,destination,found_JPEGs,b1,b0):
 	""" Restores a found JPEG-file.
@@ -171,9 +169,6 @@ def restore_PDF(file,destination,found_PDFs):
 	found_PDFs
 		amount of PDFs that have been found.
 		Used for numbering restored files.
-
-	b6, b5, b4, b3, b2, b1, b0
-		current byte sequence that's being analysed
 	 """
 	new_PDF = pathlib.Path(destination+
 		f"/restored_PDF_{found_PDFs+1}.pdf")
@@ -208,6 +203,29 @@ def restore_PDF(file,destination,found_PDFs):
 			new_file.write(b'F')
 
 def restore_GIF(file, destination, found_GIFs, b_adda, b_addb):
+	""" Restores a found GIF-file.
+
+	If a file of this type has been found, it will be written to the current
+	location.
+
+	Parameters
+	----------
+	file
+		the img-file with deleted files
+
+	destination
+		archive in which file is writen
+
+	found_GIFs
+		amount of GIFs that have been found.
+		Used for numbering restored files.
+
+	b_adda
+		add description
+
+	b_addb
+		add descirption
+	 """
 	new_GIF = pathlib.Path(destination+
 		f"/restored_GIF_{found_GIFs+1}.gif")
 	with new_GIF.open('wb') as new_file:
@@ -222,13 +240,43 @@ def restore_GIF(file, destination, found_GIFs, b_adda, b_addb):
 
 # START
 def main():
+	""" Restores deleted files from a IMG-file.
 
+	The following files can be restored:
+		- WAVE
+		- AVI
+		- JPEG
+		- PNG
+		- PDF
+		- GIF
+
+	A restore-function exists for each supported file-type.
+	After one of those files has been found the corresponding
+	function is called.
+
+	After starting the programm the user will be asked to point
+	to the IMG-File. Afterwards the user has to determine the
+	destination were the files will be written to.
+
+	The main-function and some restore-function use a similar
+	approach to find important byte sequences like the magic numbers
+	that mark the start of a file.
+	When reading the file past values will be stored.
+	For better understanding this sequence is viewed as a signal with
+	delayed elements and value bn where n is the delay.
+	The most recent byte that has been read is therefore called b0
+	and the byte before that b1 and so on.
+	By combining those bytes a byte sequence like for example
+	b'RIFF' can be formed and found on the disk.
+
+	 """
 	app = QtWidgets.QApplication()
 
+	# path to IMG-file
 	absolutePath = QtWidgets.QFileDialog.getOpenFileName(None, "Choose img-File",
 								   "/","Images (*.img)")[0]
 
-
+	# path to destination archive
 	destination = QtWidgets.QFileDialog.getExistingDirectory(None,
 	 "Choose Directory","/",QtWidgets.QFileDialog.DontUseNativeDialog)
 
@@ -237,6 +285,7 @@ def main():
 
 	print(f"Groesse des Speichers: {disk_size/1000/1000} MB.")
 
+	# file counters
 	found_JPEGs = 0
 	found_WAVEs = 0
 	found_AVIs = 0
@@ -287,26 +336,17 @@ def main():
 					print("PDF gefunden")
 					restore_PDF(file,destination,found_PDFs)
 					found_PDFs += 1
-
-
-			# FLACs
-			if b3+b2+b1+b0 == b'\x66\x4C\x61\x43':
-				print("FLAC gefunden")
-				file_length = int.from_bytes(file.read(4),"big")
-				restore_flac(file,destination,file_length,found_FLACs)
-				found_FLACs += 1
 			
-			# RIFFs
+			# RIFF
 			if b3+b2+b1+b0 == b'RIFF':
-				print("RIFF gefunden")
 				file_length = int.from_bytes(file.read(4),"little")
 				riff_type = file.read(4)
 				if riff_type == b'WAVE':
-					print("WAVE-Datei")
+					print("WAVE gefunden")
 					restore_wave(file,destination,file_length,found_WAVEs)
 					found_WAVEs += 1
 				if riff_type == b'AVI ':
-					print("AVI-Datei")
+					print("AVI gefunden")
 					restore_avi(file,destination,file_length,found_AVIs)
 					found_AVIs += 1
 
