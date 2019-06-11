@@ -39,14 +39,14 @@ The user will afterwards be asked to state, where the img-file, which has to be 
 
 ## Versioning
 Version 1.0
-This program is finished and therefore will not be updated again.
+This program is finished at the moment, updates might be uploaded sometimes.
 
 ## Authors
 * **Martin Berdau** - *Programmer* -
 [MartinBerdau](https://github.com/MartinBerdau)
 * **Tammo Sander** - *Programmer* - 
 [TammoSan](https://github.com/TammoSan)
-* **Johannes Rüsing** - *Programmer* -
+* **Johannes RÃ¼sing** - *Programmer* -
 [Skarborn](https://github.com/Skarborn)
 
 ## License
