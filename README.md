@@ -35,7 +35,7 @@ The user will afterwards be asked to state, where the img-file, which has to be 
 
 ## Built With
 * [Python3](https://www.python.org/downloads/) - Programed and runned with
-*[Sublime Text](https://www.sublimetext.com/3) - Used TextEditor; possible Tool to show the source code
+* [Sublime Text](https://www.sublimetext.com/3) - Used TextEditor; possible Tool to show the source code
 
 ## Versioning
 Version 1.0
