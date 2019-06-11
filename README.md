@@ -31,7 +31,7 @@ Otherwise terminal (macOS and linux) has to be used to run the Restore-file
 ```
 $ python3 Restore.py
 ```
-The user will afterwards be asked to state, where the img-file, which has to be restored, is positioned by clicking on the opened display. Afterwards another window of the same kind is opened for the user to decide where the restored data should be saved.
+The user will afterwards be asked to state, where the img-file, which has to be restored, is positioned by clicking on the opened display. Then another window is opened for the user to decide where the restored data should be saved.
 
 ## Built With
 * [Python3](https://www.python.org/downloads/) - Programed and runned with
