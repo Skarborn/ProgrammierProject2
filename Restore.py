@@ -244,7 +244,8 @@ def results(found_WAVEs, found_AVIs, found_JPEGs, found_PNGs,
 	found_PDFs, found_GIFs, time_used):
 	""" Prints results on the console.
 
-	This function prints out the amount of restored files.
+	This function prints out the amount of restored files and the
+	time used to run the program.
 
 	Parameters
 	----------
@@ -252,7 +253,7 @@ def results(found_WAVEs, found_AVIs, found_JPEGs, found_PNGs,
 		amount of files of type FILE that have been found.
 
 	time_used
-		time used running the programm.
+		time used running the program.
 
 
 	 """
@@ -282,12 +283,12 @@ def main():
 	After one of those files has been found the corresponding
 	function is called.
 
-	After starting the programm the user will be asked to point
+	After starting the program the user will be asked to point
 	to the IMG-File. Afterwards the user has to determine the
-	destination were the files will be written to and the programm
+	destination were the files will be written to and the program
 	will start.
 
-	After the programm is done, a result message will be displayed.
+	After the program is done, a result message will be displayed.
 
 	The main-function and some restore-function use a similar
 	approach to find important byte sequences like the magic numbers
